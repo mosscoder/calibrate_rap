@@ -1,4 +1,5 @@
 *.tif
 *.xml
 *.pdf
+.DS_Store
 .env
