@@ -21,46 +21,39 @@ We downloaded RAP data from Google Earth Engine, and summed the shrub and tree w
   <b>Figure 1:</b> RAP Woody Cover Predictions 2023
 </p>
 
-<!-- <figure style="text-align:center;">
-  <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/rap_woody_cover.png?raw=true" 
-       alt="RAP Woody Cover Predictions 2023" 
-       title="RAP Woody Cover Predictions 2023" 
-       style="width:50%; height:auto;" />
-  <figcaption><b>Figure 1:</b> RAP woody cover predictions 2023</figcaption>
-</figure> -->
-
 ---
 
 We also sourced bare earth elevation data from the USGS 3D Elevation Program, though we chose the National Elevation Dataset product (10m resolution), rather than LiDAR-derived bare earth elevation data, which might contain artifacts betraying canopy properties and introduce data leakage. We resampled these elevation data to match the 30m resolution of the RAP data, and then we derived terrain derivatives, including slope, heat load index (HLI; a proxy of solar inputs), topographic position index (TPI; a measure of a cells position relative to its neighbors), and topographic wetness index (TWI; a measure of moisture levels accounting for water flow from uphill areas). We calculated various neighborhoods of topographic position and treated it as a model tuning parameter. We retained the neighborhood corresponding to best performance for the final model. Outside of the TPI neighborhood, we found predictors to be mostly orthogonal, exhibiting no correlations greater than 0.6 in magnitude. This suggests that they each had potential to contribute unique information to the model.
 
-<figure style="text-align:center;">
-  <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/terrain_fig.png?raw=true" 
+<p align="center">
+  <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/terrain_fig.png?raw=true"
        alt="Terrain Derivatives" 
-       title="Terrain Derivatives" 
-       style="width:50%; height:auto;" />
-  <figcaption><b>Figure 2:</b> Terrain Derivatives</figcaption>
-</figure>
+       title="Terrain Derivatives" />
+  <br>
+  <b>Figure 2:</b> Terrain features derived from elevation data
+</p>
 
 ---
 
-<figure style="text-align:center;">
+<p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/cormat.png?raw=true" 
        alt="Correlation matrix of terrain predictors" 
-       title="Correlation matrix of terrain predictors" 
-       style="width:50%; height:auto;" />
-  <figcaption><b>Figure 3:</b> Correlation matrix of terrain predictors</figcaption>
-</figure>
+       title="Correlation matrix of terrain predictors" />
+  <br>
+  <b>Figure 3:</b> Correlation matrix of terrain predictors
+</p>
 
 ## Model validation strategy
 We adopted the convention of five-fold cross-validaiton for selecting the best performing calibration model, and tested this on a geographically and temporally distinct test set. It was temporally distinct, in the sense that the LiDAR ground truth were gathered in 2020, during a different scannign mission.
 
-<figure style="text-align:center;">
+<p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/test_train_area_designations.png?raw=true" 
        alt="These areas denote the bounds of areas used for training (green) and testing (magenta) RAP calibration models." 
        title="These areas denote the bounds of areas used for training (green) and testing (magenta) RAP calibration models." 
-       style="width:50%; height:auto;" />
-  <figcaption><b>Figure 4:</b> These areas denote the bounds of areas used for training (green) and testing (magenta) RAP calibration models.</figcaption>
-</figure>
+       width="50%" />
+  <br>
+  <b>Figure 4:</b> These areas denote the bounds of areas used for training (green) and testing (magenta) RAP calibration models.
+</p>
 
 ## Model fitting
 
