@@ -1,2 +1,14 @@
-# calibrate_rap
-A repo to calibrate Rangeland Analysis Platform data with LiDAR ground truth from the 3DEP project. 
+### Calibrating RAP data with LiDAR
+
+## Overview
+
+## Data sources
+
+## Model validation strategy
+
+## Model fitting
+
+## Model evaluation
+
+## Visualizing woody change at bird sampling points
+
