@@ -18,7 +18,7 @@ We downloaded RAP data from Google Earth Engine, and summed the shrub and tree w
        title="RAP Woody Cover Predictions 2023" 
        width="50%" />
   <br>
-  <b>Figure 1:</b> RAP Woody Cover Predictions 2023
+  <b>Figure 1:</b> Uncalibrated RAP Woody Cover Predictions 2023
 </p>
 
 ---
@@ -30,7 +30,7 @@ We also sourced bare earth elevation data from the USGS 3D Elevation Program, th
        alt="Terrain Derivatives" 
        title="Terrain Derivatives" />
   <br>
-  <b>Figure 2:</b> Terrain features derived from elevation data
+  <b>Figure 2:</b> Terrain features derived from elevation data used as calibration model inputs. 
 </p>
 
 ---
@@ -40,7 +40,7 @@ We also sourced bare earth elevation data from the USGS 3D Elevation Program, th
        alt="Correlation matrix of terrain predictors" 
        title="Correlation matrix of terrain predictors" />
   <br>
-  <b>Figure 3:</b> Correlation matrix of terrain predictors
+  <b>Figure 3:</b> Correlation matrix of terrain predictors. 
 </p>
 
 ## Model validation strategy
