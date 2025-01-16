@@ -1,4 +1,4 @@
-### Calibrating RAP data with LiDAR
+# Calibrating RAP data with LiDAR
 
 ## Overview
 
