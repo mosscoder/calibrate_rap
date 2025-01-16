@@ -19,7 +19,7 @@ We downloaded RAP data from Google Earth Engine, and summed the shrub and tree w
   <figcaption><b>Figure 1: RAP Woody Cover Predictions 2023</b></figcaption>
 </figure>
 
--
+---
 
 We also sourced bare earth elevation data from the USGS 3D Elevation Program, though we chose the National Elevation Dataset product (10m resolution), rather than LiDAR-derived bare earth elevation data, which might contain artifacts betraying canopy properties and introduce data leakage. We resampled these elevation data to match the 30m resolution of the RAP data, and then we derived terrain derivatives, including slope, heat load index (HLI; a proxy of solar inputs), topographic position index (TPI; a measure of a cells position relative to its neighbors), and topographic wetness index (TWI; a measure of moisture levels accounting for water flow from uphill areas). We calculated various neighborhoods of topographic position and treated it as a model tuning parameter. We retained the neighborhood corresponding to best performance for the final model. Outside of the TPI neighborhood, we found predictors to be mostly orthogonal, exhibiting no correlations greater than 0.6 in magnitude. This suggests that they each had potential to contribute unique information to the model.
 
