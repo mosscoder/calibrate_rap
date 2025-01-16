@@ -4,10 +4,10 @@
 The purpose of this work was to develop a suitable model for woody cover change at MPG Ranch, a conservation property in western Montana, USA. My products will facilitate downstream ecological analyses, such as identificaiton of factors driving bird abundance. One candidate for estimating woody cover change is the Rangeland Analysis Platform (RAP; Allred et al. 2021), a machine learning model that predicts plant functional group cover, including shrubs and trees, across the contitental US at a 30m resolution from 1986 to the present. While the spatial and temporal continuity of this product is robust, in practice I found that RAP predictions do not align with LiDAR ground truth at MPG Ranch. This repo contains the code used to develop a calibration model for correcting RAP woody cover predictions at MPG Ranch.
 
 ## Approach
-I gathered canopy height models (CHM) derived from USGS 3D elevation Project LiDAR data (USGS) and used it to calibrate the RAP model. Predictors of LiDAR-derived woody cover included 2019 RAP predictions, bare earth elevation data (National Elevation Dataset, NED), and terrain derivatives. For model architectures I used LightGBM, an efficient algorithm for developing predictive models, and stacked it with a general additive model to account for the non-linearity of the relationship between woody cover and LiDAR metrics. For model tuning I applied a cross validation approach where hold-out folds were geographically isolated. To evaluate the calibrated models potential to extrapolate to other years and locations, I sourced additional LiDAR data gathered in 2020 located on the southern boundary of MPG Ranch, which served as a test set having no bearing on model design choices. I conducted a suite of analyses to evaluate the performance of the uncalibrated and calibrated models reported below.
+I gathered canopy height models (CHM) derived from USGS 3D Elevation Project LiDAR data (USGS) and used it to calibrate the RAP model. Predictors of LiDAR-derived woody cover included 2019 RAP predictions, bare earth elevation data (National Elevation Dataset, NED), and terrain derivatives. For model architectures I used LightGBM, an efficient algorithm for developing predictive models, and stacked it with a general additive model to account for the non-linearity of the relationship between woody cover and LiDAR metrics. For model tuning I applied a cross validation approach where hold-out folds were geographically isolated. To evaluate the calibrated models potential to extrapolate to other years and locations, I sourced additional LiDAR data gathered in 2020 located on the southern boundary of MPG Ranch, which served as a test set having no bearing on model design choices. I conducted a suite of analyses to evaluate the performance of the uncalibrated and calibrated models reported below.
 
 ## Description of data sources and generation of derivative products
-To generate woody cover estiamtes from LiDAR data, I aggregated 1m resolution canopy height data to 30m resolution, counting all pixels above a 1m height threshold to establish canopy cover. This threshold represents an important design choice and trade-off, where alternative values less than 1m risk inclusion of non-woody vegetation, such as tall grassess and forbs, and thresholds greater than 1m risk exclusion of low-lying woody vegetation, such as sagebrush.
+To generate woody cover estiamtes from LiDAR data ([notebook](https://github.com/mosscoder/calibrate_rap/blob/main/01_compute_lidar_cover.ipynb)), I aggregated 1m resolution canopy height data to 30m resolution, counting all pixels above a 1m height threshold to establish canopy cover. This threshold represents an important design choice and trade-off, where alternative values less than 1m risk inclusion of non-woody vegetation, such as tall grassess and forbs, and thresholds greater than 1m risk exclusion of low-lying woody vegetation, such as sagebrush.
 
 I downloaded RAP data from Google Earth Engine, and summed the shrub and tree woody cover predictions to generate a single woody cover product. Earlier analyses revealed no performance gain from treating shrub and tree cover as separate predictors. I downloaded all available years (1986-2023) for use in generating calibrated predictions, so that I could later assess cover change over time.
 
@@ -18,7 +18,7 @@ I downloaded RAP data from Google Earth Engine, and summed the shrub and tree wo
        title="RAP Woody Cover Predictions 2023" 
        width="50%" />
   <br>
-  <b>Figure 1:</b> Uncalibrated RAP Woody Cover Predictions 2023
+  <b>Figure 1:</b> 2023 woody cover predictions from the uncalibrated RAP model.
 </p>
 
 ---
@@ -30,7 +30,7 @@ I also sourced bare earth elevation data from the USGS 3D Elevation Program, tho
        alt="Terrain Derivatives" 
        title="Terrain Derivatives" />
   <br>
-  <b>Figure 2:</b> Terrain features derived from elevation data used as calibration model inputs. 
+  <b>Figure 2:</b> Terrain features derived from elevation data used as predictors in calibrating the RAP model. 
 </p>
 
 ---
@@ -38,7 +38,7 @@ I also sourced bare earth elevation data from the USGS 3D Elevation Program, tho
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/cormat.png?raw=true" 
        alt="Correlation matrix of terrain predictors" 
-       title="Correlation matrix of terrain predictors" />
+       title="Correlation matrix of terrain predictors. Values follow tpi_* indicate the spatial neighborhood in meters considered when calculating TPI." />
   <br>
   <b>Figure 3:</b> Correlation matrix of terrain predictors. 
 </p>
