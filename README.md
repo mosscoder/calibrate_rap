@@ -38,9 +38,9 @@ I also sourced bare earth elevation data from the USGS 3D Elevation Program ([co
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/cormat.png?raw=true" 
        alt="Correlation matrix of terrain predictors" 
-       title="Correlation matrix of terrain predictors. Values follow tpi_* indicate the spatial neighborhood in meters considered when calculating TPI." />
+       title="Correlation matrix of terrain predictors" />
   <br>
-  <b>Figure 3:</b> Correlation matrix of terrain predictors. 
+  <b>Figure 3:</b> Correlation matrix of terrain predictors. Values follow tpi_* indicate the spatial neighborhood in meters considered when calculating TPI.
 </p>
 
 ## Model validation strategy
