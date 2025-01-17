@@ -79,7 +79,7 @@ LightGBM has an abundance of tuning parameters to sort through (Appendix A), and
   <b>Figure 6:</b> Model performance (mean of Normalized Gini Coefficient and R2 scores) improvement after 150 trials of Bayesian optimization.
 </p>
 
-## Cross-validated results from training set areas
+## Cross-validated training set area results from 2019
 ([code](https://github.com/mosscoder/calibrate_rap/blob/main/08_training_set_eval.ipynb))
 
 <p align="center">
@@ -107,8 +107,10 @@ LightGBM has an abundance of tuning parameters to sort through (Appendix A), and
        alt="Training error maps" 
        title="Training error maps"/>
   <br>
-  <b>Figure 9:</b> Maps of the error between LiDAR-derived woody cover and uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2019. Postiivie values indicate overestimation, while negative values indicate underestimation.
+  <b>Figure 9:</b> Maps of the error between LiDAR-derived woody cover and uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2019. Postive values indicate overestimation, while negative values indicate underestimation.
 </p>
+
+## Test set area results from 2020
 
 ## Visualizing woody change at bird sampling points
 
