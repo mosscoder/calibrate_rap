@@ -1,7 +1,7 @@
 # Calibrating RAP data with LiDAR-derived ground truth
 
 ## Overview
-The purpose of this work was to develop a suitable model for woody cover change at MPG Ranch, a conservation property in western Montana, USA. My products will facilitate downstream ecological analyses, such as identificaiton of factors driving bird abundance. One candidate for estimating woody cover change is the Rangeland Analysis Platform (RAP; Allred et al. 2021), a machine learning model that predicts plant functional group cover, including shrubs and trees, across the contitental US at a 30m resolution from 1986 to the present. While the spatial and temporal continuity of this product is robust, in practice I found that RAP predictions do not align with LiDAR ground truth at MPG Ranch. This repo contains the code and analyses for a process to align RAP woody cover predictions with LiDAR ground truth at MPG Ranch. I prioritized the use of publically available datasets and libraries for this task so that it may be replicated in other locations.
+The purpose of this work was to develop a mapped time series of woody cover at MPG Ranch, a conservation property in western Montana, USA. My products will facilitate downstream ecological analyses, such as identificaiton of factors driving bird abundance. One candidate for estimating woody cover is the Rangeland Analysis Platform (RAP; Allred et al. 2021), a machine learning model that predicts plant functional group cover, including shrubs and trees, across the contitental US at a 30m resolution from 1986 to the present. While the spatial and temporal continuity of this product is robust, in practice I found that RAP predictions do not align with LiDAR ground truth at MPG Ranch. This repo contains the code and analyses for a process to calibrate RAP woody cover predictions with LiDAR ground truth at MPG Ranch. I prioritized the use of publically available datasets and libraries for this task so that it may be replicated in other locations.
 
 ## Approach
 I gathered LiDAR-derived canopy height models (CHMs) produced by the USGS 3D Elevation Project (3DEP; Sugarbaker et al. 2014) and used these as targets for calibrating the RAP predictions. Predictors of LiDAR-derived woody cover included 2019 RAP data, bare earth elevation data (National Elevation Dataset, NED), and terrain derivatives. For model architectures I used LightGBM (Ke et al. 2017), an efficient algorithm for developing predictive models, and stacked it with a general additive model to account for the non-linearity of the relationship between uncalibrated RAP cover and LiDAR ground truth. For model tuning I applied a cross validation approach where hold-out folds were geographically isolated. To evaluate the calibrated models potential to extrapolate to other years and locations, I sourced additional LiDAR data gathered in 2020 located on the southern boundary of MPG Ranch, which served as a test set having no bearing on model design choices. I conducted a suite of analyses to evaluate the performance of the uncalibrated and calibrated models reported below.
@@ -79,7 +79,7 @@ LightGBM has an abundance of tuning parameters to sort through (Appendix A), and
   <b>Figure 6:</b> Model performance (mean of Normalized Gini Coefficient and R2 scores) improvement after 150 trials of Bayesian optimization.
 </p>
 
-## Cross-validated training set area results from 2019
+## Cross-validated results from the 2019 training set area
 We observed performance improvements across all metrics when applying the calibration process to RAP predictions ([code](https://github.com/mosscoder/calibrate_rap/blob/main/08_training_set_eval.ipynb)). The calibrated predictions showed a 1.4-fold increase in rank order agreement (Normalized Gini coefficient), a 3-fold increase in R² score, and a 2.19-fold decrease in mean absolute error. The majority of the study area had low or no woody cover, according to LiDAR-derived ground truth and expert opinion, and in these areas the uncalibrated RAP predictions overestimated woody cover, between 10% and 20%. The calibration process reduced this bias. The uncalibrated RAP model also tended to underestimate woody cover in areas with high LiDAR-derived woody cover, and here again the calibration process reduced bias.
 
 | Metric                    | Uncalibrated RAP | Calibrated RAP |
@@ -107,7 +107,7 @@ By mapping the ground truth, uncalibrated RAP predictions, and calibrated RAP pr
   <b>Figure 8:</b> Mapped LiDAR-derived woody cover (left), uncalibrated RAP predictions (center), and calibrated RAP predictions (right) in 2019.
 </p>
 
-When mapping error across the landscape, we can more clearly see spatial clustering of woody cover errors of both models. While the calibrated model model was able to achieve low error in the grassland areas, areas of denser vegetation were challenging for both models, particularly in the floodplain, mid elevations with dense bitterbrush, and higher elevations of mixed conifer systems. While the absolute error of the calibrated model could be higher in these localized sites, it is important to recognize that rank order agreement (0.84) acoss ecosystem types was higher than that of the uncalibrated model, and, therefore, detecting correlations among woody cover and other ecological meausures may yet prove tractable.
+When mapping error across the landscape, we can more clearly see spatial clustering of woody cover errors of both models. While the calibrated model model was able to achieve low error in the grassland areas, areas of denser vegetation were challenging for both models, particularly in the floodplain, mid elevations with dense bitterbrush, and higher elevations of mixed conifer systems. While the absolute error of the calibrated model could be higher in these localized sites, it is important to recognize that rank order agreement (0.84) acoss plant community types was higher than that of the uncalibrated model, and, therefore, detecting correlations among woody cover and other ecological meausures may yet prove tractable.
 
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/training_error_maps.png?raw=true" 
@@ -117,7 +117,41 @@ When mapping error across the landscape, we can more clearly see spatial cluster
   <b>Figure 9:</b> Maps of the error between LiDAR-derived woody cover and uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2019. Postive values indicate overestimation, while negative values indicate underestimation.
 </p>
 
-## Test set area results from 2020
+## Test set results from 2020 spatio-temporally isolated areas
+
+We also observed performance improvements, though of lesser magnitude, across all metrics when applying the calibration process to RAP predictions in the 2020 test set ([code](https://github.com/mosscoder/calibrate_rap/blob/main/09_test_set_eval.ipynb)). The calibrated predictions showed a 1.26-fold increase in rank order agreement, a 2.8-fold increase in R² score, and a 2.22-fold decrease in mean absolute error.
+
+
+| Metric                    | Uncalibrated RAP | Calibrated RAP |
+|--------------------------|------------------|----------------|
+| Rank Order Agreement| 0.599           | **0.753**      |
+| R² Score                  | 0.202           | **0.567**      |
+| Mean Absolute Error       | 14.591          | **6.574**      |
+
+
+<p align="center">
+  <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/test_true_v_pred.png?raw=true" 
+       alt="Test true vs pred" 
+       title="Test true vs pred"/>
+  <br>
+  <b>Figure 10:</b> Scatter plots of LiDAR-derived woody cover vs. uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2020.
+</p>
+
+<p align="center">
+  <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/test_set_predictions.png?raw=true" 
+       alt="Test predictions" 
+       title="Test predictions"/>
+  <br>
+  <b>Figure 11:</b> Mapped LiDAR-derived woody cover (left), uncalibrated RAP predictions (center), and calibrated RAP predictions (right) in 2020.
+</p>
+
+<p align="center">
+  <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/test_error_maps.png?raw=true" 
+       alt="Test error maps" 
+       title="Test error maps"/>
+  <br>
+  <b>Figure 12:</b> Maps of the error between LiDAR-derived woody cover and uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2020. Postive values indicate overestimation, while negative values indicate underestimation.
+</p>
 
 ## Visualizing woody change at bird sampling points
 
