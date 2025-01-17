@@ -43,7 +43,7 @@ I also sourced bare earth elevation data from the USGS 3D Elevation Program ([co
   <b>Figure 3:</b> Correlation matrix of terrain predictors. Values follow tpi_* indicate the spatial neighborhood in meters considered when calculating TPI.
 </p>
 
-## Model validation strategy
+## Model validation strategy tuning
 Two LiDAR missions were the focus of this work: one gathered throughout the Bitterroot Valley in 2019, and a second gathered near the northern border of Ravalli County in 2020. These two datasets overlap at the lower reaches of Woodchuck Creek, offering the opportunity to test the performance of this calibration process in a new area and time period. The non-intersecting regions of the 2019 dataset I used as the training set and the basis for model tuning, while the intersecting regions of the 2020 LiDAR data served as a test set to explore the models ability to extrapolate spatially and temporally.
 
 <p align="center">
@@ -55,7 +55,7 @@ Two LiDAR missions were the focus of this work: one gathered throughout the Bitt
   <b>Figure 4:</b> This map depicts the regions used for training (green) and testing (magenta) RAP calibration models.
 </p>
 
-I adopted a spatial cross-validaiton strategy for tuning the calibration model, where the basis for hold-out sets were latitudinal bands within the training region ([code](https://github.com/mosscoder/calibrate_rap/blob/main/06_assign_latitudinal_folds.ipynb)). The benefit of assessing latitudinal folds is that they allowed me to assess the models ability to generalize to new areas. For a background in cross validation refer to [these materials](https://machinelearningmastery.com/k-fold-cross-validation/?utm_source=chatgpt.com). Generally, a cross-validation approach is useful for evaluating what model settings, or hyperparameters, allow for optimal learning of a pattern of interest
+I adopted a spatial cross-validaiton strategy for tuning the RAP calibration model, where the basis for hold-out sets were latitudinal bands within the training region ([code](https://github.com/mosscoder/calibrate_rap/blob/main/06_assign_latitudinal_folds.ipynb)). The benefit of assessing latitudinal folds is that they allowed me to assess the models ability to generalize to new areas. For a background in cross validation refer to [these materials](https://machinelearningmastery.com/k-fold-cross-validation/?utm_source=chatgpt.com). Generally, a cross-validation approach is useful for evaluating what model settings, or hyperparameters, allow for optimal learning of a pattern of interest. Note also that I have constrained the training areas to a 500 m buffer surrounding the bird count sampling points. This was done to ensure that the product would be most accurate in the areas intended for downstream ecological analyses. Only after model tuning did I predict woody cover for the test set region and evaluate it on the 2020 LiDAR-derived woody cover data for a final evaluation.
 
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/folds.png?raw=true" 
@@ -68,9 +68,9 @@ I adopted a spatial cross-validaiton strategy for tuning the calibration model, 
 
 ---
 
-Note also that I have constrained the training areas to a 500 m buffer surrounding the bird count sampling points. This was done to ensure that the product would be most accurate in the areas intended for downstream ecological analyses.
+## Model framework and optimization
 
-## Model tuning
+
 
 ## Model evaluation
 
@@ -82,3 +82,31 @@ Allred BW, Bestelmeyer BT, Boyd CS, et al. Improving Landsat predictions of rang
 Ke, G., Meng, Q., Finley, T., Wang, T., Chen, W., Ma, W., Ye, Q., & Liu, T.-Y. (2017). LightGBM: A highly efficient gradient boosting decision tree. Proceedings of the 31st International Conference on Neural Information Processing Systems (NIPS 2017), 3149–3157. https://doi.org/10.5555/3294996.3295074
 
 U.S. Geological Survey. (n.d.). 3D elevation program (3DEP). U.S. Department of the Interior. Retrieved January 17, 2025, from https://www.usgs.gov/core-science-systems/ngp/3dep
+
+## Appendix A: Model tuning hyperparameters
+
+| Hyperparameter           | Description                                                                                      |
+|-------------------------|--------------------------------------------------------------------------------------------------|
+| `learning_rate`         | The step size at each boosting iteration, balancing convergence speed and accuracy.              |
+| `num_leaves`            | The maximum number of leaves in one tree, influencing tree complexity and potential overfitting.  |
+| `n_estimators`          | The number of boosting iterations or trees to build. Higher values increase model complexity.     |
+| `max_depth`             | The maximum depth of each tree, limiting the number of splits and controlling model complexity.   |
+| `tweedie_variance_power`| Parameter controlling the Tweedie distribution shape; values between 1 (Poisson) and 2 (Gamma).  |
+| `subsample`             | The fraction of training data used for each boosting iteration, controlling overfitting.          |
+| `colsample_bytree`      | The fraction of features used when building each tree, controlling feature sampling.              |
+| `reg_alpha`             | L1 regularization term, adding a penalty for non-zero coefficients to encourage sparsity.         |
+| `reg_lambda`            | L2 regularization term, adding a penalty for large coefficients to prevent overfitting.           |
+| `min_child_samples`     | The minimum number of samples required in a child node to allow further splits.                   |
+| `min_child_weight`      | Minimum sum of instance weights (hessian) in a child, preventing splits with insufficient data.   |
+| `min_split_gain`        | The minimum gain required for a split to be considered, avoiding small, insignificant splits.     |
+| `subsample_freq`        | The frequency (in terms of boosting iterations) to perform subsampling.                           |
+| `tpi_ngb`               | Spatial neighborhood in meters used to calculate TPI.                                             |
+| `n_splines`             | The number of splines set when fitting a Generalized Additive Model.                             |
+
+<p align="center">
+  <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/optimization/slice_plot.png?raw=true" 
+       alt="Slice" 
+       title="Slice"/>
+  <br>
+  <b>Figure A1:</b> Results of Bayesian optimization over the hyperparameter space for the RAP calibration model.
+</p>
