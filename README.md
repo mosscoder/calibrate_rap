@@ -55,7 +55,7 @@ Two LiDAR missions were the focus of this work: one gathered throughout the Bitt
   <b>Figure 4:</b> This map depicts the regions used for training (green) and testing (magenta) RAP calibration models.
 </p>
 
-I adopted a spatial cross-validaiton strategy for tuning the RAP calibration model, where the basis for hold-out sets were latitudinal bands within the training region ([code](https://github.com/mosscoder/calibrate_rap/blob/main/06_assign_latitudinal_folds.ipynb)). The benefit of assessing latitudinal folds is that they allowed me to assess the models ability to generalize to new areas. For a background in cross validation refer to [these materials](https://machinelearningmastery.com/k-fold-cross-validation/?utm_source=chatgpt.com). Generally, a cross-validation approach is useful for evaluating what model settings, or hyperparameters, allow for optimal learning of a pattern of interest. Note also that I have constrained the training areas to a 500 m buffer surrounding the bird point count sampling locations. This was done to ensure that the product would be most accurate in the areas intended for downstream ecological analyses. Only after model tuning did I predict woody cover for the test set region and evaluate it on the 2020 LiDAR-derived woody cover data for a final evaluation.
+I adopted a spatial cross-validaiton strategy for tuning the RAP calibration model, where the basis for hold-out sets were latitudinal bands within the training region ([code](https://github.com/mosscoder/calibrate_rap/blob/main/06_assign_latitudinal_folds.ipynb)). The benefit of assessing latitudinal folds is that they allowed me to assess the models ability to generalize to new areas. For a background in cross validation refer to [these materials](https://machinelearningmastery.com/k-fold-cross-validation/?utm_source=chatgpt.com). Generally, a cross-validation approach is useful for evaluating what model settings, or hyperparameters, allow for optimal learning of a pattern of interest. Note also that I have constrained the training areas to a 500 m buffer surrounding the bird point count sampling locations. This was done to ensure that the product would be most accurate in the areas intended for downstream ecological analyses. Only after model tuning did I predict woody cover for the test set region and evaluate it on the 2020 LiDAR-derived woody cover data to guard against overfitting to the test set.
 
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/folds.png?raw=true" 
@@ -69,7 +69,7 @@ I adopted a spatial cross-validaiton strategy for tuning the RAP calibration mod
 ## Model framework and optimization
 For modeling framework I chose a boosted regression tree as implemented in the LightGBM python module (Ke et al. 2017). Boosting is the process of adding models in series, where each model learns from the errors of the previous model. When paired with tree-based models, boosting can effectively model non-linear relationships between predictors and targets. Because ecological cover data are rich in zeros, with a long right tail, careful selection of the objective function (the means by which model error is calculated during learning) is important. I chose the Tweedie objective, as it matches the distribution of the zero-rich cover data (Jørgensen 1987). In practice I found that models fitted with a Tweedie objective correctly represent the rank order of woody cover values, but they tended to underestimate the magnitude of those values, and for this reason I fitted a secondary model, a Generalized Additive Model (GAM; Hastie and Tibshirani 1990), stacked on top of the boosted regression tree predictions to correct for this bias. Stacking is the process of fitting two or more models in series, where the output of the first model is used as the input for the second model.
 
-LightGBM has an abundance of tuning parameters to sort through (Appendix A), and I used a Bayesian optimization approach to sweep across the hyperparameter space to find the optimal settings for the RAP calibration model. I used the optuna python package to perform this search ([code](https://github.com/mosscoder/calibrate_rap/blob/main/07_hyperparam_sweep.ipynb)). Briefly, Bayesian optimization balances exploration and exploitation in a series of trials where new combinations of hyperparameters are tested. Results from prior trials are used as the basis for selecting settings for the next trial. I conducted 150 trials, maximizing the mean of the Normalized Gini Coefficient (assess rank order agreement between predicted and true woody cover) and R2 scores (assess variance explained by the model) across the five folds. I observed highest performance after 143 trials.
+LightGBM has an abundance of tuning parameters to sort through (Appendix A), and I used a Bayesian optimization approach to sweep across the hyperparameter space to find the optimal settings for the RAP calibration model. I used the optuna python package to perform this search ([code](https://github.com/mosscoder/calibrate_rap/blob/main/07_hyperparam_sweep.ipynb)). Briefly, Bayesian optimization balances exploration and exploitation in a series of trials where new combinations of hyperparameters are tested. Results from prior trials are used as the basis for selecting settings for the next trial. I conducted 150 trials, maximizing the mean of the Normalized Gini Coefficient (assess rank order agreement between predicted and true woody cover) and R2 scores (assess variance explained by the model) across the five folds. Both metrics vary from 0 to 1, where values approaching 1 indicate higher performance. I observed highest performance after 143 trials.
 
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/optimization/optimization_history.png?raw=true" 
@@ -80,28 +80,34 @@ LightGBM has an abundance of tuning parameters to sort through (Appendix A), and
 </p>
 
 ## Cross-validated training set area results from 2019
+We observed performance improvements across all metrics when applying the calibration process to the RAP model. The calibrated model showed a 1.4-fold increase in rank order agreement (normalized gini coefficient), a 3-fold increase in R² score, and a 2.19-fold decrease in mean absolute error.
+
+| Model Version    | Normalized Gini Coefficient | R² Score | Mean Absolute Error |
+|-----------------|---------------------|----------|-------------------|
+| Uncalibrated RAP| 0.600              | 0.210    | 14.443           |
+| Calibrated RAP  | 0.841              | 0.629    | 6.597            |
+
+
 ([code](https://github.com/mosscoder/calibrate_rap/blob/main/08_training_set_eval.ipynb))
-
-<p align="center">
-  <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/training_set_predictions.png?raw=true" 
-       alt="Training predictions" 
-       title="Training predictions"/>
-  <br>
-  <b>Figure 7:</b> Mapped LiDAR-derived woody cover (left), uncalibrated RAP predictions (center), and calibrated RAP predictions (right) in 2019.
-</p>
-
----
 
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/training_true_v_pred.png?raw=true" 
        alt="Training true vs pred" 
        title="Training true vs pred"/>
   <br>
-  <b>Figure 8:</b> Scatter plots of LiDAR-derived woody cover vs. uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2019.
+  <b>Figure 7:</b> Scatter plots of LiDAR-derived woody cover vs. uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2019.
 </p>
 
 ---
+<p align="center">
+  <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/training_set_predictions.png?raw=true" 
+       alt="Training predictions" 
+       title="Training predictions"/>
+  <br>
+  <b>Figure 8:</b> Mapped LiDAR-derived woody cover (left), uncalibrated RAP predictions (center), and calibrated RAP predictions (right) in 2019.
+</p>
 
+---
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/training_error_maps.png?raw=true" 
        alt="Training error maps" 
