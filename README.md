@@ -82,11 +82,11 @@ LightGBM has an abundance of tuning parameters to sort through (Appendix A), and
 ## Cross-validated training set area results from 2019
 We observed performance improvements across all metrics when applying the calibration process to the RAP model. The calibrated model showed a 1.4-fold increase in rank order agreement (normalized gini coefficient), a 3-fold increase in R² score, and a 2.19-fold decrease in mean absolute error.
 
-| Model Version    | Normalized Gini Coefficient | R² Score | Mean Absolute Error |
-|-----------------|---------------------|----------|-------------------|
-| Uncalibrated RAP| 0.600              | 0.210    | 14.443           |
-| Calibrated RAP  | 0.841              | 0.629    | 6.597            |
-
+| Metric                    | Uncalibrated RAP | Calibrated RAP |
+|--------------------------|------------------|----------------|
+| Normalized Gini Coefficient| 0.600           | 0.841          |
+| R² Score                  | 0.210           | 0.629          |
+| Mean Absolute Error       | 14.443          | 6.597          |
 
 ([code](https://github.com/mosscoder/calibrate_rap/blob/main/08_training_set_eval.ipynb))
 
