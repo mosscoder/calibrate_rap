@@ -10,7 +10,7 @@ The uncalibrated RAP model dramatically overestimates woody cover in upland gras
 I gathered LiDAR-derived canopy height models (CHMs) produced by the USGS 3D Elevation Project (3DEP; Sugarbaker et al. 2014) and used these as targets for calibrating the RAP predictions. Predictors of LiDAR-derived woody cover included 2019 RAP data, bare earth elevation data (National Elevation Dataset, NED), and terrain derivatives. For model architectures I used LightGBM (Ke et al. 2017), an efficient algorithm for developing predictive models, and stacked it with a general additive model to account for the non-linearity of the relationship between uncalibrated RAP cover and LiDAR ground truth. For model tuning I applied a cross-validation approach where hold-out folds were geographically isolated. To evaluate the calibrated model's potential to extrapolate to other years and locations, I sourced additional LiDAR data gathered in 2020 located on the southern boundary of MPG Ranch, which served as a test set having no bearing on model design choices. I conducted a suite of analyses to evaluate the performance of the uncalibrated and calibrated models reported below.
 
 ## Description of data sources and generation of derivative products
-To generate woody cover estiamtes from LiDAR data, I aggregated 1m resolution canopy height data to 30 m resolution, counting all pixels above a 1 meter height threshold to establish canopy cover ([code](https://github.com/mosscoder/calibrate_rap/blob/main/01_compute_lidar_cover.ipynb)). This threshold represents an important design choice and trade-off, where alternative values less than 1 m risk inclusion of non-woody vegetation, such as tall grassess and forbs, and thresholds greater than 1 m risk exclusion of low-lying woody vegetation, such as sagebrush.
+To generate woody cover estimates from LiDAR data, I aggregated 1m resolution canopy height data to 30 m resolution, counting all pixels above a 1 meter height threshold to establish canopy cover ([code](https://github.com/mosscoder/calibrate_rap/blob/main/01_compute_lidar_cover.ipynb)). This threshold represents an important design choice and trade-off, where alternative values less than 1 m risk inclusion of non-woody vegetation, such as tall grassess and forbs, and thresholds greater than 1 m risk exclusion of low-lying woody vegetation, such as sagebrush.
 
 I downloaded RAP data from Google Earth Engine, and summed the shrub and tree woody cover predictions to generate a single woody cover product ([code](https://github.com/mosscoder/calibrate_rap/blob/main/03_download_rap_from_gee.ipynb)). Earlier analyses revealed no performance gain from treating shrub and tree cover as separate predictors. I downloaded all available years (1986-2023) for use in generating calibrated predictions, so that I could later assess cover change over time.
 
@@ -110,14 +110,14 @@ By mapping the ground truth, uncalibrated RAP predictions, and calibrated RAP pr
   <b>Figure 8:</b> Mapped LiDAR-derived woody cover (left), uncalibrated RAP predictions (center), and calibrated RAP predictions (right) in 2019.
 </p>
 
-When mapping error across the landscape, we can more clearly see spatial clustering of woody cover errors of both models. While the calibrated model model was able to achieve low error in the grassland areas, areas of denser vegetation were challenging for both models, particularly in the floodplain, mid elevations with dense bitterbrush, and higher elevations of mixed conifer systems. While the absolute error of the calibrated model could be higher in these localized sites, it is important to recognize that rank order agreement (0.84) acoss plant community types was higher than that of the uncalibrated model, and, therefore, detecting correlations among woody cover and other ecological meausures may yet prove tractable.
+When mapping error across the landscape, we can more clearly see spatial clustering of woody cover errors of both models. While the calibrated model model was able to achieve low error in the grassland areas, areas of denser vegetation were challenging for both models, particularly in the floodplain, mid elevations with dense bitterbrush, and higher elevations of mixed conifer systems. While the absolute error of the calibrated model could be higher in these localized sites, it is important to recognize that rank order agreement (0.84) across plant community types was higher than that of the uncalibrated model, and, therefore, detecting correlations among woody cover and other ecological measures may yet prove tractable.
 
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/training_error_maps.png?raw=true" 
        alt="Training error maps" 
        title="Training error maps"/>
   <br>
-  <b>Figure 9:</b> Maps of the error between LiDAR-derived woody cover and uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2019. Postive values indicate overestimation, while negative values indicate underestimation.
+  <b>Figure 9:</b> Maps of the error between LiDAR-derived woody cover and uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2019. Positive values indicate overestimation, while negative values indicate underestimation.
 </p>
 
 ## Test set results from 2020 spatiotemporal hold-out areas
@@ -157,7 +157,7 @@ Mapping errors across the landscape we can see the regions of error for both mod
        alt="Test error maps" 
        title="Test error maps"/>
   <br>
-  <b>Figure 12:</b> Maps of the error between LiDAR-derived woody cover and uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2020. Postive values indicate overestimation, while negative values indicate underestimation.
+  <b>Figure 12:</b> Maps of the error between LiDAR-derived woody cover and uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2020. Positive values indicate overestimation, while negative values indicate underestimation.
 </p>
 
 ## Visualizing woody change at bird sampling points
