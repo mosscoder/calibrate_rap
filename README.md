@@ -1,10 +1,10 @@
 # Calibrating RAP data with LiDAR-derived ground truth
 
 ## Overview
-The purpose of this work was to develop a suitable model for woody cover change at MPG Ranch, a conservation property in western Montana, USA. My products will facilitate downstream ecological analyses, such as identificaiton of factors driving bird abundance. One candidate for estimating woody cover change is the Rangeland Analysis Platform (RAP; Allred et al. 2021), a machine learning model that predicts plant functional group cover, including shrubs and trees, across the contitental US at a 30m resolution from 1986 to the present. While the spatial and temporal continuity of this product is robust, in practice I found that RAP predictions do not align with LiDAR ground truth at MPG Ranch. This repo contains the code used to develop a calibration model for correcting RAP woody cover predictions at MPG Ranch.
+The purpose of this work was to develop a suitable model for woody cover change at MPG Ranch, a conservation property in western Montana, USA. My products will facilitate downstream ecological analyses, such as identificaiton of factors driving bird abundance. One candidate for estimating woody cover change is the Rangeland Analysis Platform (RAP; Allred et al. 2021), a machine learning model that predicts plant functional group cover, including shrubs and trees, across the contitental US at a 30m resolution from 1986 to the present. While the spatial and temporal continuity of this product is robust, in practice I found that RAP predictions do not align with LiDAR ground truth at MPG Ranch. This repo contains the code and analyses for a process to align RAP woody cover predictions with LiDAR ground truth at MPG Ranch. I prioritized the use of publically available datasets and libraries for this task so that it may be replicated in other locations.
 
 ## Approach
-I gathered canopy height models (CHM) derived from USGS 3D Elevation Project LiDAR data (USGS) and used it to calibrate the RAP model. Predictors of LiDAR-derived woody cover included 2019 RAP predictions, bare earth elevation data (National Elevation Dataset, NED), and terrain derivatives. For model architectures I used LightGBM, an efficient algorithm for developing predictive models, and stacked it with a general additive model to account for the non-linearity of the relationship between woody cover and LiDAR metrics. For model tuning I applied a cross validation approach where hold-out folds were geographically isolated. To evaluate the calibrated models potential to extrapolate to other years and locations, I sourced additional LiDAR data gathered in 2020 located on the southern boundary of MPG Ranch, which served as a test set having no bearing on model design choices. I conducted a suite of analyses to evaluate the performance of the uncalibrated and calibrated models reported below.
+I gathered canopy height models (CHMs) derived from USGS 3D Elevation Project LiDAR data (USGS) and used these as targets for calibrating the RAP predictions. Predictors of LiDAR-derived woody cover included 2019 RAP data, bare earth elevation data (National Elevation Dataset, NED), and terrain derivatives. For model architectures I used LightGBM (Ke et al. 2017), an efficient algorithm for developing predictive models, and stacked it with a general additive model to account for the non-linearity of the relationship between uncalibrated RAP cover and LiDAR ground truth. For model tuning I applied a cross validation approach where hold-out folds were geographically isolated. To evaluate the calibrated models potential to extrapolate to other years and locations, I sourced additional LiDAR data gathered in 2020 located on the southern boundary of MPG Ranch, which served as a test set having no bearing on model design choices. I conducted a suite of analyses to evaluate the performance of the uncalibrated and calibrated models reported below.
 
 ## Description of data sources and generation of derivative products
 To generate woody cover estiamtes from LiDAR data ([code](https://github.com/mosscoder/calibrate_rap/blob/main/01_compute_lidar_cover.ipynb)), I aggregated 1m resolution canopy height data to 30m resolution, counting all pixels above a 1m height threshold to establish canopy cover. This threshold represents an important design choice and trade-off, where alternative values less than 1m risk inclusion of non-woody vegetation, such as tall grassess and forbs, and thresholds greater than 1m risk exclusion of low-lying woody vegetation, such as sagebrush.
@@ -44,7 +44,7 @@ I also sourced bare earth elevation data from the USGS 3D Elevation Program ([co
 </p>
 
 ## Model validation strategy
-Two LiDAR missions were the focus of this work: one gathered throughout the Bitterroot Valley in 2019, and a second gathered near the northern border of Ravalli County in 2020. These two datasets overlap at the lower reaches of Woodchuck Creek. The non-intersecting regions of the 2019 dataset I used as the training set and the basis for model tuning, while the intersecting regions of the 2020 LiDAR data served as a test set to explore the models ability to extrapolate to new areas and time periods.
+Two LiDAR missions were the focus of this work: one gathered throughout the Bitterroot Valley in 2019, and a second gathered near the northern border of Ravalli County in 2020. These two datasets overlap at the lower reaches of Woodchuck Creek, offering the opportunity to test the performance of this calibration process in a new area and time period. The non-intersecting regions of the 2019 dataset I used as the training set and the basis for model tuning, while the intersecting regions of the 2020 LiDAR data served as a test set to explore the models ability to extrapolate spatially and temporally.
 
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/test_train_area_designations.png?raw=true" 
@@ -55,18 +55,22 @@ Two LiDAR missions were the focus of this work: one gathered throughout the Bitt
   <b>Figure 4:</b> This map depicts the regions used for training (green) and testing (magenta) RAP calibration models.
 </p>
 
-I adopted a five-fold cross-validaiton for selecting the best performing calibration model, where the basis for hold-out folds were latitudinal bands within the training region ([code](https://github.com/mosscoder/calibrate_rap/blob/main/06_assign_latitudinal_folds.ipynb)). 
+I adopted a spatial cross-validaiton strategy for tuning the calibration model, where the basis for hold-out sets were latitudinal bands within the training region ([code](https://github.com/mosscoder/calibrate_rap/blob/main/06_assign_latitudinal_folds.ipynb)). The benefit of assessing latitudinal folds is that they allowed me to assess the models ability to generalize to new areas. For a background in cross validation refer to [these materials](https://machinelearningmastery.com/k-fold-cross-validation/?utm_source=chatgpt.com). Generally, a cross-validation approach is useful for evaluating what model settings, or hyperparameters, allow for optimal learning of a pattern of interest
 
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/folds.png?raw=true" 
        alt="Latitudinal folds" 
        title="Latitudinal folds" 
-       width="50%" />
+       width="75%" />
   <br>
   <b>Figure 5:</b> This map depicts the latitudinal bands used as folds during model tuning.
 </p>
 
-## Model fitting
+---
+
+Note also that I have constrained the training areas to a 500 m buffer surrounding the bird count sampling points. This was done to ensure that the product would be most accurate in the areas intended for downstream ecological analyses.
+
+## Model tuning
 
 ## Model evaluation
 
