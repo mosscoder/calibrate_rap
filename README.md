@@ -90,6 +90,8 @@ LightGBM has an abundance of tuning parameters to sort through (Appendix A), and
   <b>Figure 7:</b> Mapped LiDAR-derived woody cover (left), uncalibrated RAP predictions (center), and calibrated RAP predictions (right) in 2019.
 </p>
 
+---
+
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/training_true_v_pred.png?raw=true" 
        alt="Training true vs pred" 
@@ -97,6 +99,8 @@ LightGBM has an abundance of tuning parameters to sort through (Appendix A), and
   <br>
   <b>Figure 8:</b> Scatter plots of LiDAR-derived woody cover vs. uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2019.
 </p>
+
+---
 
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/training_error_maps.png?raw=true" 
