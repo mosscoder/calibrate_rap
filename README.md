@@ -117,7 +117,7 @@ When mapping error across the landscape, we can more clearly see spatial cluster
   <b>Figure 9:</b> Maps of the error between LiDAR-derived woody cover and uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2019. Postive values indicate overestimation, while negative values indicate underestimation.
 </p>
 
-## Test set results from 2020 spatio-temporally isolated areas
+## Test set results from 2020 spatiotemporal hold-out areas
 
 We also observed performance improvements, though of lesser magnitude, across all metrics when applying the calibration process to RAP predictions in the 2020 test set ([code](https://github.com/mosscoder/calibrate_rap/blob/main/09_test_set_eval.ipynb)). The calibrated predictions showed a 1.26-fold increase in rank order agreement, a 2.8-fold increase in R² score, and a 2.22-fold decrease in mean absolute error.
 
@@ -137,6 +137,8 @@ We also observed performance improvements, though of lesser magnitude, across al
   <b>Figure 10:</b> Scatter plots of LiDAR-derived woody cover vs. uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2020.
 </p>
 
+As in the training set areas, the uncalibrated model overestimated woody cover in the upland areas. However, LiDAR ground truth showed a greater amount of woody cover in the upland areas compared to similar elevations in the training set areas. The calibrated model tended to underestimate woody cover in those upland areas.
+
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/test_set_predictions.png?raw=true" 
        alt="Test predictions" 
@@ -144,6 +146,8 @@ We also observed performance improvements, though of lesser magnitude, across al
   <br>
   <b>Figure 11:</b> Mapped LiDAR-derived woody cover (left), uncalibrated RAP predictions (center), and calibrated RAP predictions (right) in 2020.
 </p>
+
+Mapping errors across the landscape we can see the regions of error for both models. While the uncalibrated model exhibited error across the region, those of the calibrated model were more localized.
 
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/test_error_maps.png?raw=true" 
