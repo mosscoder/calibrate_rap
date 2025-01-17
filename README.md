@@ -44,7 +44,7 @@ I also sourced bare earth elevation data from the USGS 3D Elevation Program ([co
 </p>
 
 ## Model validation strategy
-Two LiDAR missions were the focus of this work: one gathered throughout the Bitterroot Valley in 2019, and a second gathered near the northern border of Ravalli County in 2020. These two datasets overlapped at the lower reaches of Woodchuck Creek. The non-intersecting regions of the 2019 dataset I used as the training set and the basis for model tuning, while the intersecting regions of the 2020 LiDAR data served as a test set.
+Two LiDAR missions were the focus of this work: one gathered throughout the Bitterroot Valley in 2019, and a second gathered near the northern border of Ravalli County in 2020. These two datasets overlap at the lower reaches of Woodchuck Creek. The non-intersecting regions of the 2019 dataset I used as the training set and the basis for model tuning, while the intersecting regions of the 2020 LiDAR data served as a test set to explore the models ability to extrapolate to new areas and time periods.
 
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/test_train_area_designations.png?raw=true" 
@@ -52,11 +52,19 @@ Two LiDAR missions were the focus of this work: one gathered throughout the Bitt
        title="These areas denote the bounds of areas used for training (green) and testing (magenta) RAP calibration models." 
        width="50%" />
   <br>
-  <b>Figure 4:</b> These areas denote the regions used for training (green) and testing (magenta) RAP calibration models.
+  <b>Figure 4:</b> This map depicts the regions used for training (green) and testing (magenta) RAP calibration models.
 </p>
 
-I adopted the convention of five-fold cross-validaiton for selecting the best performing calibration model, and tested this on a geographically and temporally distinct test set. It was temporally distinct, in the sense that the LiDAR ground truth were gathered in 2020, during a different scannign mission.
+I adopted a five-fold cross-validaiton for selecting the best performing calibration model, where the basis for hold-out folds were latitudinal bands within the training region ([code](https://github.com/mosscoder/calibrate_rap/blob/main/06_assign_latitudinal_folds.ipynb)). 
 
+<p align="center">
+  <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/folds.png?raw=true" 
+       alt="Latitudinal folds" 
+       title="Latitudinal folds" 
+       width="50%" />
+  <br>
+  <b>Figure 5:</b> This map depicts the latitudinal bands used as folds during model tuning.
+</p>
 
 ## Model fitting
 
