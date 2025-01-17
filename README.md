@@ -119,7 +119,7 @@ When mapping error across the landscape, we can more clearly see spatial cluster
 
 ## Test set results from 2020 spatiotemporal hold-out areas
 
-We also observed performance improvements, though of lesser magnitude, across all metrics when applying the calibration process to RAP predictions in the 2020 test set ([code](https://github.com/mosscoder/calibrate_rap/blob/main/09_test_set_eval.ipynb)). The calibrated predictions showed a 1.26-fold increase in rank order agreement, a 2.8-fold increase in R² score, and a 2.22-fold decrease in mean absolute error.
+I also observed performance improvements, though of lesser magnitude, across all metrics when applying the calibration process to RAP predictions in the 2020 test set ([code](https://github.com/mosscoder/calibrate_rap/blob/main/09_test_set_eval.ipynb)). The calibrated predictions showed a 1.26-fold increase in rank order agreement, a 2.8-fold increase in R² score, and a 2.22-fold decrease in mean absolute error.
 
 
 | Metric                    | Uncalibrated RAP | Calibrated RAP |
@@ -137,7 +137,7 @@ We also observed performance improvements, though of lesser magnitude, across al
   <b>Figure 10:</b> Scatter plots of LiDAR-derived woody cover vs. uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2020.
 </p>
 
-As in the training set areas, the uncalibrated model overestimated woody cover in the upland areas. However, LiDAR ground truth showed a greater amount of woody cover in the upland areas compared to similar elevations in the training set areas. The calibrated model tended to underestimate woody cover in those upland areas.
+As in the training set areas, the uncalibrated model overestimated woody cover in the upland areas. However, LiDAR ground truth showed, in fact, a greater amount of woody cover clustered in certain upland test areas, as compared to similar elevations in the training set areas. Here the calibrated model tended to underestimate woody cover in what I suspect are shrub-dominated areas.
 
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/test_set_predictions.png?raw=true" 
@@ -158,6 +158,15 @@ Mapping errors across the landscape we can see the regions of error for both mod
 </p>
 
 ## Visualizing woody change at bird sampling points
+With the time series of predicted cover maps, we can visualize the change in woody cover. I observed most change at the elevation extremes at the bird point count locations, with little change in the mid elevations.
+
+<p align="center">
+  <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/cover_change_plots.png?raw=true" 
+       alt="Cover change plots" 
+       title="Cover change plots"/>
+  <br>
+  <b>Figure 13:</b> These maps depict predicted woody cover change according to the calibrated RAP model between 2016 and 2011 (left) and 2020 and 2011 (right) at bird point count locations.
+</p>
 
 ## References
 Allred BW, Bestelmeyer BT, Boyd CS, et al. Improving Landsat predictions of rangeland fractional cover with multitask learning and uncertainty. Methods Ecol Evol. 2021; 12: 841–849. https://doi.org/10.1111/2041-210X.13564
