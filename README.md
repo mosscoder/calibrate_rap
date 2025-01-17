@@ -91,7 +91,7 @@ LightGBM has an abundance of tuning parameters to sort through (Appendix A), and
 </p>
 
 <p align="center">
-  <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/training_true_vs_pred.png?raw=true" 
+  <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/training_true_v_pred.png?raw=true" 
        alt="Training true vs pred" 
        title="Training true vs pred"/>
   <br>
