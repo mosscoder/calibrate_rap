@@ -78,7 +78,33 @@ LightGBM has an abundance of tuning parameters to sort through (Appendix A), and
   <br>
   <b>Figure 6:</b> Model performance (mean of Normalized Gini Coefficient and R2 scores) improvement after 150 trials of Bayesian optimization.
 </p>
-## Model evaluation
+
+## Cross-validated results from training set areas
+([code](https://github.com/mosscoder/calibrate_rap/blob/main/08_training_set_eval.ipynb))
+
+<p align="center">
+  <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/training_set_predictions.png?raw=true" 
+       alt="Training predictions" 
+       title="Training predictions"/>
+  <br>
+  <b>Figure 7:</b> Mapped LiDAR-derived woody cover (left), uncalibrated RAP predictions (center), and calibrated RAP predictions (right) in 2019.
+</p>
+
+<p align="center">
+  <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/training_true_vs_pred.png?raw=true" 
+       alt="Training true vs pred" 
+       title="Training true vs pred"/>
+  <br>
+  <b>Figure 8:</b> Scatter plots of LiDAR-derived woody cover vs. uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2019.
+</p>
+
+<p align="center">
+  <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/training_error_maps.png?raw=true" 
+       alt="Training error maps" 
+       title="Training error maps"/>
+  <br>
+  <b>Figure 9:</b> Maps of the error between LiDAR-derived woody cover and uncalibrated RAP predictions (left) and calibrated RAP predictions (right) in 2019. Postiivie values indicate overestimation, while negative values indicate underestimation.
+</p>
 
 ## Visualizing woody change at bird sampling points
 
