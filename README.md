@@ -80,16 +80,16 @@ LightGBM has an abundance of tuning parameters to sort through (Appendix A), and
 </p>
 
 ## Cross-validated training set area results from 2019
-We observed performance improvements across all metrics when applying the calibration process to the RAP model. The calibrated model showed a 1.4-fold increase in rank order agreement (normalized gini coefficient), a 3-fold increase in R² score, and a 2.19-fold decrease in mean absolute error.
+We observed performance improvements across all metrics when applying the calibration process to RAP predictions ([code](https://github.com/mosscoder/calibrate_rap/blob/main/08_training_set_eval.ipynb)). The calibrated predictions showed a 1.4-fold increase in rank order agreement (Normalized Gini coefficient), a 3-fold increase in R² score, and a 2.19-fold decrease in mean absolute error. The majority of the study area had low or no woody cover, according to LiDAR-derived ground truth, and in these areas the uncalibrated RAP predictions overestimated woody cover, between 10% and 20% on average. The calibration process reduced this bias. The uncalibrated RAP model also tended to underestimate woody cover in areas with high LiDAR-derived woody cover, and here again the calibration process reduced bias.
 
 | Metric                    | Uncalibrated RAP | Calibrated RAP |
 |--------------------------|------------------|----------------|
-| Normalized Gini Coefficient| 0.600           | 0.841          |
-| R² Score                  | 0.210           | 0.629          |
-| Mean Absolute Error       | 14.443          | 6.597          |
+| Normalized Gini Coefficient| 0.600           | **0.841**      |
+| R² Score                  | 0.210           | **0.629**      |
+| Mean Absolute Error       | 14.443          | **6.597**      |
 
-([code](https://github.com/mosscoder/calibrate_rap/blob/main/08_training_set_eval.ipynb))
 
+By mapping the ground truth, uncalibrated RAP predictions, and calibrated RAP predictions, we can see that the the uncalibrated model dramatically overestimates woody cover in the 
 <p align="center">
   <img src="https://github.com/mosscoder/calibrate_rap/blob/main/results/figures/training_true_v_pred.png?raw=true" 
        alt="Training true vs pred" 
